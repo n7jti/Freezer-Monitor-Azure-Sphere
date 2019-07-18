@@ -1,7 +1,7 @@
 {
   "SchemaVersion": 1,
   "Name": "HelloWorld_HighLevelApp_CMake",
-  "ComponentId": "1689d8b2-c835-2e27-27ad-e894d6d15fa9",
+  "ComponentId": "aae5a7e7-292d-4582-9868-231b205c04cf",
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
