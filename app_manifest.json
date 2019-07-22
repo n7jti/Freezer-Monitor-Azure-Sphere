@@ -5,7 +5,8 @@
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
-    "Gpio": [ "$MT3620_GPIO31", "$MT3620_GPIO35" ]
+    "Gpio": [ "$MT3620_GPIO31", "$MT3620_GPIO35" ],
+    "I2cMaster": [ "$MT3620_ISU0_I2C" ]
   },
   "ApplicationType": "Default"
 }
