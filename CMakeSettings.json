@@ -5,7 +5,7 @@
 
       "AzureSphereTargetApplicationRuntimeVersion": 2,
       "AzureSphereTargetBetaApis": "",
-      "AzureSphereTargetHardwareDefinitionDirectory": "..\\..\\..\\Hardware\\mt3620_rdb",
+      "AzureSphereTargetHardwareDefinitionDirectory": "Hardware\\mt3620_rdb",
       "AzureSphereTargetHardwareDefinition": "sample_hardware.json"
     }
   ],
