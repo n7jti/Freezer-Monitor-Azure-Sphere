@@ -26,7 +26,7 @@ int main(void)
 {
     Log_Debug("Starting CMake Hello World application...\n");
 
-    int fd = GPIO_OpenAsOutput(SAMPLE_LED, GPIO_OutputMode_PushPull, GPIO_Value_High);
+    int fd = GPIO_OpenAsOutput(MT3620_GPIO31, GPIO_OutputMode_PushPull, GPIO_Value_High);
     if (fd < 0) {
         Log_Debug(
             "Error opening GPIO: %s (%d). Check that app_manifest.json includes the GPIO used.\n",

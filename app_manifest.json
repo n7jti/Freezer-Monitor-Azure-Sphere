@@ -5,7 +5,7 @@
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
-    "Gpio": [ "$SAMPLE_LED" ]
+    "Gpio": [ "$MT3620_GPIO31" ]
   },
   "ApplicationType": "Default"
 }
