@@ -9,53 +9,59 @@
 
 // Constants from MCP9600 datasheet:  http://ww1.microchip.com/downloads/en/DeviceDoc/MCP9600-Family-Data-Sheet-20005426E.pdf
 
-#define MCP9600_ADDR 0x67
+constexpr uint16_t MCP9600_ADDR = 0x67;
+constexpr uint16_t MCP9600_REG_HOT_JUNCTION  = 0x00;
+constexpr uint16_t MCP9600_REG_TEMP_DELTA = 0x01;
+constexpr uint16_t MCP9600_REG_COLD_JUNCTION = 0x02;
+constexpr uint16_t MCP9600_REG_RAW_ADC = 0x03;
+constexpr uint16_t MCP9600_REG_STATUS = 0x04;
+constexpr uint16_t MCP9600_REG_SENSOR_CONFIG = 0x05;
+constexpr uint16_t MCP9600_REG_DEVICE_CONFIG = 0x06;
+constexpr uint16_t MCP9600_REG_ALERT_1_CONFIG = 0x08;
+constexpr uint16_t MCP9600_REG_ALERT_2_CONFIG = 0x09;
+constexpr uint16_t MCP9600_REG_ALERT_3_CONFIG = 0x0A;
+constexpr uint16_t MCP9600_REG_ALERT_4_CONFIG = 0x0B;
+constexpr uint16_t MCP9600_REG_ALERT_1_HYST = 0x0C;
+constexpr uint16_t MCP9600_REG_ALERT_2_HYST = 0x0D;
+constexpr uint16_t MCP9600_REG_ALERT_3_HYST = 0x0E;
+constexpr uint16_t MCP9600_REG_ALERT_4_HYST = 0x0F;
+constexpr uint16_t MCP9600_REG_TALERT_1 = 0x10;
+constexpr uint16_t MCP9600_REG_TALERT_2 = 0x11;
+constexpr uint16_t MCP9600_REG_TALERT_3 = 0x12;
+constexpr uint16_t MCP9600_REG_TALERT_4 = 0x13;
+constexpr uint16_t MCP9600_REG_DEVICEID = 0x20;
 
-#define MCP9600_REG_HOT_JUNCTION  0x00
-#define MCP9600_REG_TEMP_DELTA 0x01
-#define MCP9600_REG_COLD_JUNCTION 0x02
-#define MCP9600_REG_RAW_ADC 0x03
-#define MCP9600_REG_STATUS 0x04
-#define MCP9600_REG_SENSOR_CONFIG 0x05
-#define MCP9600_REG_DEVICE_CONFIG 0x06
-#define MCP9600_REG_ALERT_1_CONFIG 0x08
-#define MCP9600_REG_ALERT_2_CONFIG 0x09
-#define MCP9600_REG_ALERT_3_CONFIG 0x0A
-#define MCP9600_REG_ALERT_4_CONFIG 0x0B
-#define MCP9600_REG_ALERT_1_HYST 0x0C
-#define MCP9600_REG_ALERT_2_HYST 0x0D
-#define MCP9600_REG_ALERT_3_HYST 0x0E
-#define MCP9600_REG_ALERT_4_HYST 0x0F
-#define MCP9600_REG_TALERT_1 0x10
-#define MCP9600_REG_TALERT_2 0x11
-#define MCP9600_REG_TALERT_3 0x12
-#define MCP9600_REG_TALERT_4 0x13
-#define MCP9600_REG_DEVICEID 0x20
-
-#define	MCP9600_TYPE_K 0x0
-#define MCP9600_TYPE_J 0x1
-#define	MCP9600_TYPE_T 0x2
-#define	MCP9600_TYPE_N 0x3
-#define	MCP9600_TYPE_S 0x4
-#define	MCP9600_TYPE_E 0x5
-#define	MCP9600_TYPE_B 0x6
-#define	MCP9600_TYPE_R 0x7
-
-#define	MCP9600_ADC_RES_18 0
-#define	MCP9600_ADC_RES_16 1
-#define	MCP9600_ADC_RES_14 2
-#define	MCP9600_ADC_RES_12 3
-
-class CMcp9600{
-public:
-	int foo; 
+class enum MCP9600_TYPE {
+	MCP9600_TYPE_K = 0x0,
+	MCP9600_TYPE_J 0x1,
+	MCP9600_TYPE_T 0x2,
+	MCP9600_TYPE_N 0x3,
+	MCP9600_TYPE_S 0x4,
+	MCP9600_TYPE_E 0x5,
+	MCP9600_TYPE_B 0x6,
+	MCP9600_TYPE_R 0x7
 };
 
-int mcp9600_begin(I2C_InterfaceId id, I2C_DeviceAddress address);
-bool setThermocoupleType(int fd, I2C_DeviceAddress address, uint16_t type);
-bool getThermocoupleType(int fd, I2C_DeviceAddress address, uint16_t *type);
-bool setFilterBits(int fd, I2C_DeviceAddress address, uint16_t bits);
-bool getFilterBits(int fd, I2C_DeviceAddress address, uint16_t *bits);
-bool setAdcResolution(int fd, I2C_DeviceAddress address, uint16_t type);
-bool getAdcResolution(int fd, I2C_DeviceAddress address, uint16_t *type);
-bool getTemprature(int fd, I2C_DeviceAddress address, float *temp);
+class enum MCP9600_ADC_RES {
+	MCP9600_ADC_RES_18 0,
+	MCP9600_ADC_RES_16 1,
+	MCP9600_ADC_RES_14 2,
+	MCP9600_ADC_RES_12 3
+};
+
+class CMcp9600 {
+public: 
+	CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address);
+	bool mcp9600_begin();
+	void setThermocoupleType(MCP9600_TYPE type);
+	MCP9600_TYPE getThermocoupleType();
+	void setFilterBits(uint16_t bits);
+	bool getFilterBits(uint16_t* bits);
+	void setAdcResolution(MCP9600_ADC_RES res);
+	MCP9600_ADC_RES getAdcResolution();
+	float getTemprature();
+private:
+	I2C_InterfaceID _id; 
+	I2C_DeviceaAddress _address;
+	int _fd;
+};

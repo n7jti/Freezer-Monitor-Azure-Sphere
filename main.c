@@ -23,7 +23,9 @@
 // This #include imports the sample_hardware abstraction from that hardware definition.
 #include <hw/sample_hardware.h>
 
-int main()
+int main(void);
+
+int main(void)
 {
 	Log_Debug("Starting CMake Hello World application...\n");
 
