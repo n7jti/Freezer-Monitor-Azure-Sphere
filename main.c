@@ -16,7 +16,7 @@
 
 #include <applibs/log.h>
 #include <applibs/gpio.h>
-#include <applibs/i2c.h>
+
 
 // By default, this sample is targeted at the MT3620 Reference Development Board (RDB).
 // This can be changed using the CMakeSettings.json property "Target Hardware Definition Directory".

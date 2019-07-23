@@ -4,7 +4,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+
+#include <applibs/i2c.h>
+
 // Constants from MCP9600 datasheet:  http://ww1.microchip.com/downloads/en/DeviceDoc/MCP9600-Family-Data-Sheet-20005426E.pdf
+
 #define MCP9600_ADDR 0x67
 
 #define MCP9600_REG_HOT_JUNCTION  0x00
@@ -42,11 +46,11 @@
 #define	MCP9600_ADC_RES_14 2
 #define	MCP9600_ADC_RES_12 3
 
-bool mcp9600_begin(uint16_t address);
-bool setThermocoupleType(uint16_t address, uint16_t type);
-bool getThermocoupleType(uint16_t address, uint16_t *type);
-bool setFilterBits(uint16_t address, uint16_t bits);
-bool getFilterBits(uint16_t address, uint16_t *bits);
-bool setAdcResolution(uint16_t address, uint16_t type);
-bool getAdcResolution(uint16_t address, uint16_t *type);
-bool getTemprature(uint16_t address, float *temp);
+int mcp9600_begin(I2C_InterfaceId id, I2C_DeviceAddress address);
+bool setThermocoupleType(int fd, I2C_DeviceAddress address, uint16_t type);
+bool getThermocoupleType(int fd, I2C_DeviceAddress address, uint16_t *type);
+bool setFilterBits(int fd, I2C_DeviceAddress address, uint16_t bits);
+bool getFilterBits(int fd, I2C_DeviceAddress address, uint16_t *bits);
+bool setAdcResolution(int fd, I2C_DeviceAddress address, uint16_t type);
+bool getAdcResolution(int fd, I2C_DeviceAddress address, uint16_t *type);
+bool getTemprature(int fd, I2C_DeviceAddress address, float *temp);

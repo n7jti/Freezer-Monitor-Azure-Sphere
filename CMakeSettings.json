@@ -2,9 +2,8 @@
   "environments": [
     {
       "environment": "AzureSphere",
-
       "AzureSphereTargetApplicationRuntimeVersion": 2,
-      "AzureSphereTargetBetaApis": "",
+      "AzureSphereTargetBetaApis": "Beta1905",
       "AzureSphereTargetHardwareDefinitionDirectory": "Hardware\\mt3620_rdb",
       "AzureSphereTargetHardwareDefinition": "sample_hardware.json"
     }
@@ -14,9 +13,7 @@
       "name": "ARM-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
-      "inheritEnvironments": [
-        "AzureSphere"
-      ],
+      "inheritEnvironments": [ "AzureSphere" ],
       "buildRoot": "${workspaceRoot}\\out\\${name}-${env.AzureSphereTargetApplicationRuntimeVersion}${env.AzureSphereTargetBetaApis}",
       "installRoot": "${workspaceRoot}\\install\\${name}-${env.AzureSphereTargetApplicationRuntimeVersion}${env.AzureSphereTargetBetaApis}",
       "cmakeCommandArgs": "--no-warn-unused-cli",
@@ -25,23 +22,28 @@
       "variables": [
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${env.AzureSphereDefaultSDKDir}CMakeFiles\\AzureSphereToolchain.cmake"
+          "value": "${env.AzureSphereDefaultSDKDir}CMakeFiles\\AzureSphereToolchain.cmake",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_APPLICATION_RUNTIME_VERSION",
-          "value": "${env.AzureSphereTargetApplicationRuntimeVersion}"
+          "value": "${env.AzureSphereTargetApplicationRuntimeVersion}",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_BETA_APIS",
-          "value": "${env.AzureSphereTargetBetaApis}"
+          "value": "${env.AzureSphereTargetBetaApis}",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_HARDWARE_DEFINITION_DIRECTORY",
-          "value": "${workspaceRoot}\\${env.AzureSphereTargetHardwareDefinitionDirectory}"
+          "value": "${workspaceRoot}\\${env.AzureSphereTargetHardwareDefinitionDirectory}",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_HARDWARE_DEFINITION",
-          "value": "${env.AzureSphereTargetHardwareDefinition}"
+          "value": "${env.AzureSphereTargetHardwareDefinition}",
+          "type": "STRING"
         }
       ]
     },
@@ -49,9 +51,7 @@
       "name": "ARM-Release",
       "generator": "Ninja",
       "configurationType": "Release",
-      "inheritEnvironments": [
-        "AzureSphere"
-      ],
+      "inheritEnvironments": [ "AzureSphere" ],
       "buildRoot": "${workspaceRoot}\\out\\${name}-${env.AzureSphereTargetApplicationRuntimeVersion}${env.AzureSphereTargetBetaApis}",
       "installRoot": "${workspaceRoot}\\install\\${name}-${env.AzureSphereTargetApplicationRuntimeVersion}${env.AzureSphereTargetBetaApis}",
       "cmakeCommandArgs": "--no-warn-unused-cli",
@@ -60,23 +60,28 @@
       "variables": [
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${env.AzureSphereDefaultSDKDir}CMakeFiles\\AzureSphereToolchain.cmake"
+          "value": "${env.AzureSphereDefaultSDKDir}CMakeFiles\\AzureSphereToolchain.cmake",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_APPLICATION_RUNTIME_VERSION",
-          "value": "${env.AzureSphereTargetApplicationRuntimeVersion}"
+          "value": "${env.AzureSphereTargetApplicationRuntimeVersion}",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_BETA_APIS",
-          "value": "${env.AzureSphereTargetBetaApis}"
+          "value": "${env.AzureSphereTargetBetaApis}",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_HARDWARE_DEFINITION_DIRECTORY",
-          "value": "${workspaceRoot}\\${env.AzureSphereTargetHardwareDefinitionDirectory}"
+          "value": "${workspaceRoot}\\${env.AzureSphereTargetHardwareDefinitionDirectory}",
+          "type": "STRING"
         },
         {
           "name": "AZURE_SPHERE_TARGET_HARDWARE_DEFINITION",
-          "value": "${env.AzureSphereTargetHardwareDefinition}"
+          "value": "${env.AzureSphereTargetHardwareDefinition}",
+          "type": "STRING"
         }
       ]
     }
