@@ -23,25 +23,25 @@
 // This #include imports the sample_hardware abstraction from that hardware definition.
 #include <hw/sample_hardware.h>
 
-#include "mcp9600.h"
-
-int main(void)
+int main()
 {
-    Log_Debug("Starting CMake Hello World application...\n");
+	Log_Debug("Starting CMake Hello World application...\n");
 
-    int fd = GPIO_OpenAsOutput(MT3620_GPIO31, GPIO_OutputMode_PushPull, GPIO_Value_High);
-    if (fd < 0) {
-        Log_Debug(
-            "Error opening GPIO: %s (%d). Check that app_manifest.json includes the GPIO used.\n",
-            strerror(errno), errno);
-        return -1;
-    }
+	int fd = GPIO_OpenAsOutput(MT3620_GPIO31, GPIO_OutputMode_PushPull, GPIO_Value_High);
+	if (fd < 0) {
+		Log_Debug(
+			"Error opening GPIO: %s (%d). Check that app_manifest.json includes the GPIO used.\n",
+			strerror(errno), errno);
+		return -1;
+	}
 
-    const struct timespec sleepTime = {1, 0};
-    while (true) {
-        GPIO_SetValue(fd, GPIO_Value_Low);
-        nanosleep(&sleepTime, NULL);
-        GPIO_SetValue(fd, GPIO_Value_High);
-        nanosleep(&sleepTime, NULL);
-    }
+	const struct timespec sleepTime = { 1, 0 };
+	while (true) {
+		GPIO_SetValue(fd, GPIO_Value_Low);
+		nanosleep(&sleepTime, NULL);
+		GPIO_SetValue(fd, GPIO_Value_High);
+		nanosleep(&sleepTime, NULL);
+	}
+
 }
+

@@ -46,6 +46,11 @@
 #define	MCP9600_ADC_RES_14 2
 #define	MCP9600_ADC_RES_12 3
 
+class CMcp9600{
+public:
+	int foo; 
+};
+
 int mcp9600_begin(I2C_InterfaceId id, I2C_DeviceAddress address);
 bool setThermocoupleType(int fd, I2C_DeviceAddress address, uint16_t type);
 bool getThermocoupleType(int fd, I2C_DeviceAddress address, uint16_t *type);
