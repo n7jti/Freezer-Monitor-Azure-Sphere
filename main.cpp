@@ -32,14 +32,14 @@ int main(void)
 	Log_Debug("Starting CMake Hello World application...\n");
 
 	// button pin assignment
-	button = GPIO_OpenAsInput(34);
+	button = GPIO_OpenAsInput(8);
 
 	// buzzer
 	int buzzer = GPIO_OpenAsOutput(4, GPIO_OutputMode_PushPull, GPIO_Value_Low);
 
 	// LED pin assignments
-	int redLED = GPIO_OpenAsOutput(31, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-	int greenLED = GPIO_OpenAsOutput(35, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	int redLED = GPIO_OpenAsOutput(5, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	int greenLED = GPIO_OpenAsOutput(6, GPIO_OutputMode_PushPull, GPIO_Value_Low);
 
 	/*
 	if (fd < 0) {
