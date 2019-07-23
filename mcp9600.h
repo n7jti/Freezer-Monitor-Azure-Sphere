@@ -1,5 +1,9 @@
 /* Copyright (c) 2019 Alan Ludwig. All rights reserved.
    Licensed under the MIT License.  See License.txt */
+
+#pragma once
+
+
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdbool.h>

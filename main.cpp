@@ -17,60 +17,48 @@
 #include <applibs/log.h>
 #include <applibs/gpio.h>
 
-static int button = -1;
-const struct timespec sleepTime = { 1, 0 };
+#include "monitor.h"
+#include "door.h"
 
-void buzzerBeep(int buzzerId)
-{
-	GPIO_SetValue(buzzerId, GPIO_Value_High);
-	nanosleep(&sleepTime, NULL);
-	GPIO_SetValue(buzzerId, GPIO_Value_Low);
-}
+constexpr int DOOR_PIN = 8;
+constexpr int RED_PIN = 5;
+constexpr int GREEN_PIN = 6;
+constexpr int BUZZER_PIN = 4;
+
+constexpr int MS_PER_MIN = 60000;
+constexpr int DOOR_TIMEOUT_MS = MS_PER_MIN;
+
 
 int main(void)
 {
 	Log_Debug("Starting CMake Hello World application...\n");
 
-	// button pin assignment
-	button = GPIO_OpenAsInput(8);
+	Door door(DOOR_PIN);
+	if (!door.begin()) {
+		Log_Debug("Door Failed to start!\n");
+	}
+
+	Monitor monitor(&door, DOOR_TIMEOUT_MS);
+	if(!monitor.begin()) {
+		Log_Debug("Monitor Failed to start!\n");
+	}
+
 
 	// buzzer
-	int buzzer = GPIO_OpenAsOutput(4, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	// int buzzer = GPIO_OpenAsOutput(4, GPIO_OutputMode_PushPull, GPIO_Value_Low);
 
 	// LED pin assignments
-	int redLED = GPIO_OpenAsOutput(5, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-	int greenLED = GPIO_OpenAsOutput(6, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-
-	/*
-	if (fd < 0) {
-		Log_Debug(
-			"Error opening GPIO: %s (%d). Check that app_manifest.json includes the GPIO used.\n",
-			strerror(errno), errno);
-		return -1;
-	}
-	*/
-
-	GPIO_Value_Type buttonState;
-	GPIO_Value_Type prevButtonState;
+	// int redLED = GPIO_OpenAsOutput(5, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	// int greenLED = GPIO_OpenAsOutput(6, GPIO_OutputMode_PushPull, GPIO_Value_Low);
 
 	while (true) {
-
-		/*
-		GPIO_SetValue(fd, GPIO_Value_Low);
-		nanosleep(&sleepTime, NULL);
-		GPIO_SetValue(fd, GPIO_Value_High);
-		nanosleep(&sleepTime, NULL);
-		*/
-
-		GPIO_GetValue(button, &buttonState);
-		if (!(buttonState == prevButtonState))
-		{
-			GPIO_SetValue(redLED, buttonState);
-			GPIO_SetValue(greenLED, !buttonState);
-			prevButtonState = buttonState;
-
-			buzzerBeep(buzzer);
-		}
+		monitor.run(); 
+		
 	}
+}
+
+extern "C" void __cxa_pure_virtual()
+{
+	while (1);
 }
 
