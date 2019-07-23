@@ -17,8 +17,6 @@
 #include <applibs/log.h>
 #include <applibs/gpio.h>
 
-#include "freezerMonitor.h"
-
 static int button = -1;
 const struct timespec sleepTime = { 1, 0 };
 
@@ -32,8 +30,6 @@ void buzzerBeep(int buzzerId)
 int main(void)
 {
 	Log_Debug("Starting CMake Hello World application...\n");
-
-	setup();
 
 	// button pin assignment
 	button = GPIO_OpenAsInput(34);
@@ -58,7 +54,7 @@ int main(void)
 	GPIO_Value_Type prevButtonState;
 
 	while (true) {
-		loop(); 
+
 		/*
 		GPIO_SetValue(fd, GPIO_Value_Low);
 		nanosleep(&sleepTime, NULL);
