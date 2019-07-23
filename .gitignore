@@ -2,3 +2,5 @@
 /out/
 /install/
 /.vs
+/bin/ARM/Debug
+/obj/ARM/Debug
