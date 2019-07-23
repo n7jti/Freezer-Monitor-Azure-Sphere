@@ -1,7 +1,7 @@
 {
   "SchemaVersion": 1,
-  "Name": "HelloWorld_HighLevelApp_CMake",
-  "ComponentId": "aae5a7e7-292d-4582-9868-231b205c04cf",
+  "Name": "Freezer_Monitor_Azure_Sphere",
+  "ComponentId": "b2ef3d4f-5482-46af-95f6-70d39f4821f8",
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {

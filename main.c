@@ -23,6 +23,8 @@
 // This #include imports the sample_hardware abstraction from that hardware definition.
 #include <hw/sample_hardware.h>
 
+#include "mcp9600.h"
+
 int main(void)
 {
     Log_Debug("Starting CMake Hello World application...\n");

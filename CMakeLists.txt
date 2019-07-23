@@ -2,10 +2,10 @@
 #  Licensed under the MIT License.
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.11)
-PROJECT(HelloWorld_HighLevelApp_CMake C)
+PROJECT(Freezer_Monitor_Azure_Sphere C)
 
 # Create executable
-ADD_EXECUTABLE(${PROJECT_NAME} main.c)
+ADD_EXECUTABLE(${PROJECT_NAME} main.c mcp9600.c)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} applibs pthread gcc_s c)
 
 # Add MakeImage post-build command
