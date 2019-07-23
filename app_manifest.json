@@ -6,8 +6,8 @@
   "CmdArgs": [],
   "Capabilities": {
     "AllowedConnections": [],
-    "Gpio": [ 9 ],
-    "Uart": [],
+    "Gpio": [ 4, 34, 35 ],
+    "I2cMaster": [ "ISU0_I2C" ],
     "WifiConfig": false
   },
   "ApplicationType":"Default"
