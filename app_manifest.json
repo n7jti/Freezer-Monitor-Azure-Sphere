@@ -1,7 +1,7 @@
 {
   "SchemaVersion": 1,
-  "Name" : "FreezerMonitor_VS",
-  "ComponentId" : "2feabcb7-a216-449f-bfc3-ecf7c0b99c55",
+  "Name": "Freezer_Monitor_Azure_Sphere",
+  "ComponentId": "b2ef3d4f-5482-46af-95f6-70d39f4821f8",
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
@@ -10,5 +10,5 @@
     "I2cMaster": [ "ISU0_I2C" ],
     "WifiConfig": false
   },
-  "ApplicationType":"Default"
+  "ApplicationType": "Default"
 }
