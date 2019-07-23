@@ -6,7 +6,7 @@
   "CmdArgs": [],
   "Capabilities": {
     "AllowedConnections": [],
-    "Gpio": [ 4, 34, 35 ],
+    "Gpio": [ 4, 31, 34, 35 ],
     "WifiConfig": false
   },
   "ApplicationType": "Default"
