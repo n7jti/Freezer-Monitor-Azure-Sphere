@@ -39,10 +39,16 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mcp9600.cpp" />
+    <ClCompile Include="monitor.cpp" />
+    <ClCompile Include="notification.cpp" />
+    <ClCompile Include="trigger.cpp" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mcp9600.h" />
+    <ClInclude Include="monitor.h" />
+    <ClInclude Include="notification.h" />
+    <ClInclude Include="trigger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -7,7 +7,8 @@
   "Capabilities": {
     "AllowedConnections": [],
     "Gpio": [ 4, 31, 34, 35 ],
-    "WifiConfig": false
+    "WifiConfig": false,
+    "SystemTime": true
   },
   "ApplicationType": "Default"
 }
