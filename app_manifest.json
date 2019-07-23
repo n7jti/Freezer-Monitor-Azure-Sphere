@@ -8,7 +8,7 @@
     "AllowedConnections": [],
     "Gpio": [ 4, 31, 34, 35 ],
     "WifiConfig": false,
-    "SystemTime": true
+    "I2cMaster": [ "ISU0" ]
   },
   "ApplicationType": "Default"
 }
