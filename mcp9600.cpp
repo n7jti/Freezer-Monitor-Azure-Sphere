@@ -14,7 +14,7 @@ void CMcp9600::setThermocoupleType(MCP9600_TYPE type)
 
 MCP9600_TYPE CMcp9600::getThermocoupleType()
 {
-	return  0; 
+	return  MCP9600_TYPE_K; 
 }
 
 void CMcp9600::setFilterBits(uint16_t bits) {
@@ -33,7 +33,7 @@ void CMcp9600::setAdcResolution(MCP9600_ADC_RES res)
 
 MCP9600_ADC_RES CMcp9600::getAdcResolution()
 {
-	return 0;
+	return MCP9600_ADC_RES_18;
 }
 
 float CMcp9600::getTemprature()

@@ -31,22 +31,22 @@ constexpr uint16_t MCP9600_REG_TALERT_3 = 0x12;
 constexpr uint16_t MCP9600_REG_TALERT_4 = 0x13;
 constexpr uint16_t MCP9600_REG_DEVICEID = 0x20;
 
-class enum MCP9600_TYPE {
+enum MCP9600_TYPE {
 	MCP9600_TYPE_K = 0x0,
-	MCP9600_TYPE_J 0x1,
-	MCP9600_TYPE_T 0x2,
-	MCP9600_TYPE_N 0x3,
-	MCP9600_TYPE_S 0x4,
-	MCP9600_TYPE_E 0x5,
-	MCP9600_TYPE_B 0x6,
-	MCP9600_TYPE_R 0x7
+	MCP9600_TYPE_J = 0x1,
+	MCP9600_TYPE_T = 0x2,
+	MCP9600_TYPE_N = 0x3,
+	MCP9600_TYPE_S = 0x4,
+	MCP9600_TYPE_E = 0x5,
+	MCP9600_TYPE_B = 0x6,
+	MCP9600_TYPE_R = 0x7
 };
 
-class enum MCP9600_ADC_RES {
-	MCP9600_ADC_RES_18 0,
-	MCP9600_ADC_RES_16 1,
-	MCP9600_ADC_RES_14 2,
-	MCP9600_ADC_RES_12 3
+enum MCP9600_ADC_RES {
+	MCP9600_ADC_RES_18 = 0,
+	MCP9600_ADC_RES_16 = 1,
+	MCP9600_ADC_RES_14 = 2,
+	MCP9600_ADC_RES_12 = 3
 };
 
 class CMcp9600 {
@@ -61,7 +61,7 @@ public:
 	MCP9600_ADC_RES getAdcResolution();
 	float getTemprature();
 private:
-	I2C_InterfaceID _id; 
-	I2C_DeviceaAddress _address;
+	I2C_InterfaceId _id;
+	I2C_DeviceAddress _address;
 	int _fd;
 };

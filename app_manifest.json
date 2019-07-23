@@ -1,0 +1,14 @@
+{
+  "SchemaVersion": 1,
+  "Name" : "FreezerMonitor_VS",
+  "ComponentId" : "2feabcb7-a216-449f-bfc3-ecf7c0b99c55",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {
+    "AllowedConnections": [],
+    "Gpio": [ 9 ],
+    "Uart": [],
+    "WifiConfig": false
+  },
+  "ApplicationType":"Default"
+}

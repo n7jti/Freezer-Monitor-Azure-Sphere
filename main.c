@@ -17,11 +17,7 @@
 #include <applibs/log.h>
 #include <applibs/gpio.h>
 
-
-// By default, this sample is targeted at the MT3620 Reference Development Board (RDB).
-// This can be changed using the CMakeSettings.json property "Target Hardware Definition Directory".
-// This #include imports the sample_hardware abstraction from that hardware definition.
-#include <hw/sample_hardware.h>
+#include "freezerMonitor.h"
 
 static int button = -1;
 const struct timespec sleepTime = { 1, 0 };
@@ -33,19 +29,21 @@ void buzzerBeep(int buzzerId)
 	GPIO_SetValue(buzzerId, GPIO_Value_Low);
 }
 
-int main()
+int main(void)
 {
 	Log_Debug("Starting CMake Hello World application...\n");
 
+	setup();
+
 	// button pin assignment
-	button = GPIO_OpenAsInput(MT3620_GPIO34);
+	button = GPIO_OpenAsInput(34);
 
 	// buzzer
-	int buzzer = GPIO_OpenAsOutput(MT3620_GPIO4, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	int buzzer = GPIO_OpenAsOutput(4, GPIO_OutputMode_PushPull, GPIO_Value_Low);
 
 	// LED pin assignments
-	int redLED = GPIO_OpenAsOutput(MT3620_GPIO31, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-	int greenLED = GPIO_OpenAsOutput(MT3620_GPIO35, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	int redLED = GPIO_OpenAsOutput(31, GPIO_OutputMode_PushPull, GPIO_Value_Low);
+	int greenLED = GPIO_OpenAsOutput(35, GPIO_OutputMode_PushPull, GPIO_Value_Low);
 
 	/*
 	if (fd < 0) {
@@ -60,6 +58,7 @@ int main()
 	GPIO_Value_Type prevButtonState;
 
 	while (true) {
+		loop(); 
 		/*
 		GPIO_SetValue(fd, GPIO_Value_Low);
 		nanosleep(&sleepTime, NULL);
