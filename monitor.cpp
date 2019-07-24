@@ -1,14 +1,6 @@
 // monitor.cpp
-
-#include <time.h>
 #include "monitor.h"
-
-
-static long millis() {
-	timespec ts;
-	clock_gettime(CLOCK_MONOTONIC, &ts);
-	return ts.tv_nsec / 1000000;
-}
+#include "utils.h"
 
 
 Monitor::Monitor(Trigger *trigger, unsigned int timeout) 

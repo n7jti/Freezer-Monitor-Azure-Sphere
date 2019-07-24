@@ -19,6 +19,7 @@
 
 #include "monitor.h"
 #include "door.h"
+#include "ledbuzzer.h"
 
 constexpr int DOOR_PIN = 8;
 constexpr int RED_PIN = 5;
@@ -28,33 +29,34 @@ constexpr int BUZZER_PIN = 4;
 constexpr int MS_PER_MIN = 60000;
 constexpr int DOOR_TIMEOUT_MS = MS_PER_MIN;
 
+constexpr struct timespec sleepTime = { 0, 250000000 }; //250ms
 
 int main(void)
 {
 	Log_Debug("Starting CMake Hello World application...\n");
+	bool quit = false; 
 
 	Door door(DOOR_PIN);
-	if (!door.begin()) {
-		Log_Debug("Door Failed to start!\n");
-	}
 
 	Monitor monitor(&door, DOOR_TIMEOUT_MS);
-	if(!monitor.begin()) {
+	if (!monitor.begin()) {
 		Log_Debug("Monitor Failed to start!\n");
+		quit = true; 
 	}
 
+	LedBuzzer ledBuzzer(monitor, RED_PIN, GREEN_PIN, BUZZER_PIN);
+	if (!ledBuzzer.begin()) {
+		Log_Debug("Monitor Failed to start!\n");
+		quit = true; 
+	}
 
-	// buzzer
-	// int buzzer = GPIO_OpenAsOutput(4, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-
-	// LED pin assignments
-	// int redLED = GPIO_OpenAsOutput(5, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-	// int greenLED = GPIO_OpenAsOutput(6, GPIO_OutputMode_PushPull, GPIO_Value_Low);
-
-	while (true) {
+	while (!quit) {
 		monitor.run(); 
-		
+		ledBuzzer.run();
+		nanosleep(&sleepTime, NULL); // sleep for 250ms
 	}
+
+	return 0; 
 }
 
 extern "C" void __cxa_pure_virtual()
