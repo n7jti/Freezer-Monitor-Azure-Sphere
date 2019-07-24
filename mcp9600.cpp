@@ -33,6 +33,7 @@ static uint8_t read8(int fd, I2C_DeviceAddress address, uint8_t reg)
 	return value;
 }
 
+/*
 static uint16_t read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 {
 	uint16_t value = 0xFFFF;
@@ -40,6 +41,8 @@ static uint16_t read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 	CMcp9600::CheckTransferSize("I2CMaster_Read", sizeof(reg) + sizeof(value), transferredBytes);
 	return value;
 }
+
+*/
 
 bool CMcp9600::mcp9600_begin() {
 	_fd = I2CMaster_Open(_id);
@@ -94,10 +97,10 @@ int CMcp9600::testTermocouple()
 
 bool CMcp9600::setThermocoupleType(MCP9600_TYPE type)
 {	
-	uint8_t valueToWrite = (type << 4)|0;
-
-
-
+	int typevalue = static_cast<int>(type) << 4; 
+	uint8_t valueToWrite = static_cast<uint8_t>(typevalue);
+	(void)valueToWrite; 
+	return false; 
 }
 
 MCP9600_TYPE CMcp9600::getThermocoupleType()
