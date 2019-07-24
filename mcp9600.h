@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 
 #define I2C_STRUCTS_VERSION 0
 #include <applibs/i2c.h>
@@ -36,9 +37,9 @@ constexpr uint16_t MCP9600_REG_TALERT_1 = 0x10;
 constexpr uint16_t MCP9600_REG_TALERT_2 = 0x11;
 constexpr uint16_t MCP9600_REG_TALERT_3 = 0x12;
 constexpr uint16_t MCP9600_REG_TALERT_4 = 0x13;
-constexpr uint16_t MCP9600_REG_DEVICEID = 0x20;
+constexpr uint8_t MCP9600_REG_DEVICEID = 0x20;
 
-enum MCP9600_TYPE {
+enum MCP9600_TYPE : uint8_t {
 	MCP9600_TYPE_K = 0x0,
 	MCP9600_TYPE_J = 0x1,
 	MCP9600_TYPE_T = 0x2,
@@ -56,15 +57,12 @@ enum MCP9600_ADC_RES {
 	MCP9600_ADC_RES_12 = 3
 };
 
-enum MCP9600_ERROR {
-	NO_ERROR = 0,
-	ERROR_PARAM = -1
-};
 
 class CMcp9600 {
 public: 
 	CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address);
-	void mcp9600_begin();
+	bool mcp9600_begin();
+	int testTermocouple();
 	bool setThermocoupleType(MCP9600_TYPE type);
 	MCP9600_TYPE getThermocoupleType();
 	void setFilterBits(uint16_t bits);
@@ -72,10 +70,12 @@ public:
 	void setAdcResolution(MCP9600_ADC_RES res);
 	MCP9600_ADC_RES getAdcResolution();
 	float getTemprature();
+	static bool CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes);
+	~CMcp9600();
 	
 private:
 	I2C_InterfaceId _id;
 	I2C_DeviceAddress _address;
 	int _fd;
-	bool CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes);
+	
 };

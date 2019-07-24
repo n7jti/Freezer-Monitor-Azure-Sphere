@@ -20,6 +20,7 @@
 #include "monitor.h"
 #include "door.h"
 #include "ledbuzzer.h"
+#include "mcp9600.h"
 
 constexpr int DOOR_PIN = 8;
 constexpr int RED_PIN = 5;
@@ -50,10 +51,21 @@ int main(void)
 		quit = true; 
 	}
 
+	CMcp9600 tempSensor(0, MCP9600_ADDR);
+	if (!tempSensor.mcp9600_begin()) {
+		Log_Debug("Temp Sensor Failed to start!\n");
+		quit = true;
+	}
+
 	while (!quit) {
 		monitor.run(); 
 		ledBuzzer.run();
 		nanosleep(&sleepTime, NULL); // sleep for 250ms
+
+		if (tempSensor.testTermocouple() == -1)
+		{
+			quit = true;
+		}
 	}
 
 	return 0; 
