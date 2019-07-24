@@ -28,7 +28,7 @@ constexpr int GREEN_PIN = 6;
 constexpr int BUZZER_PIN = 4;
 
 constexpr int MS_PER_MIN = 60000;
-constexpr int DOOR_TIMEOUT_MS = MS_PER_MIN;
+constexpr int DOOR_TIMEOUT_MS = MS_PER_MIN / 6;
 
 constexpr struct timespec sleepTime = { 0, 250000000 }; //250ms
 
