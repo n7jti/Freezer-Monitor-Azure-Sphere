@@ -37,22 +37,19 @@ void LedBuzzer::onRed(bool isNew)
 		GPIO_SetValue(_redfd, GPIO_Value_Low);
     }
 	GPIO_SetValue(_greenfd, GPIO_Value_Low);
-
-    // Alarm!
-    if (isNew) {
-		GPIO_SetValue(_buzzerfd, GPIO_Value_High);
-    } 
+	GPIO_SetValue(_buzzerfd, GPIO_Value_High);
 }
 
 void LedBuzzer::onYellow(bool isNew)
 {
 	GPIO_SetValue(_redfd, GPIO_Value_High);
 	GPIO_SetValue(_greenfd, GPIO_Value_Low);
+	GPIO_SetValue(_buzzerfd, GPIO_Value_Low);
 }
 
 void LedBuzzer::onGreen(bool isNew)
 {
-	GPIO_SetValue(_buzzerfd, GPIO_Value_Low);
 	GPIO_SetValue(_redfd, GPIO_Value_Low);
 	GPIO_SetValue(_greenfd, GPIO_Value_High);
+	GPIO_SetValue(_buzzerfd, GPIO_Value_Low);
 }

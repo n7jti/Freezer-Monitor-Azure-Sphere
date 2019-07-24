@@ -2,6 +2,7 @@
 #include "door.h"
 #include <string.h>
 #include <applibs/gpio.h>
+#include <applibs/log.h>
 
 Door::Door(int pin)
   : Trigger()
@@ -19,13 +20,15 @@ bool Door::begin()
 
 bool Door::isTriggered()
 {
-	GPIO_Value_Type val; 
+	GPIO_Value_Type val = GPIO_Value_Low; 
   // The magnetic switch connects the pin to ground.
   // The magnetic switch is normally open, but is pulled closed by the magnet.
   // The pin is pulled-up and reads high when the switch is open 
   // We want our state variables to be HIGH when the door is open and LOW when closed. 
   // The pin reads high when the door is open. 
-  GPIO_GetValue(_fd, &val);
+  if (GPIO_GetValue(_fd, &val) < 0) {
+	Log_Debug("Failed to get GPIO value\n");
+  }
   return val == GPIO_Value_High;
 }
 
