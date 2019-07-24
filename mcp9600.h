@@ -3,9 +3,12 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <errno.h>
+#include <string.h>
 
-
+#define I2C_STRUCTS_VERSION 0
 #include <applibs/i2c.h>
+#include <applibs\log.h>
 
 // Constants from MCP9600 datasheet:  http://ww1.microchip.com/downloads/en/DeviceDoc/MCP9600-Family-Data-Sheet-20005426E.pdf
 
@@ -49,19 +52,26 @@ enum MCP9600_ADC_RES {
 	MCP9600_ADC_RES_12 = 3
 };
 
+enum MCP9600_ERROR {
+	NO_ERROR = 0,
+	ERROR_PARAM = -1
+};
+
 class CMcp9600 {
 public: 
 	CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address);
-	bool mcp9600_begin();
-	void setThermocoupleType(MCP9600_TYPE type);
+	void mcp9600_begin();
+	bool setThermocoupleType(MCP9600_TYPE type);
 	MCP9600_TYPE getThermocoupleType();
 	void setFilterBits(uint16_t bits);
 	bool getFilterBits(uint16_t* bits);
 	void setAdcResolution(MCP9600_ADC_RES res);
 	MCP9600_ADC_RES getAdcResolution();
 	float getTemprature();
+	
 private:
 	I2C_InterfaceId _id;
 	I2C_DeviceAddress _address;
 	int _fd;
+	bool CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes);
 };
