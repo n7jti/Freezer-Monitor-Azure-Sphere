@@ -1,5 +1,8 @@
 // (C) Alan Ludwig 2019 All Rights Reserved
+#include "utils.h"
+#include <applibs/log.h>
 #include <time.h>
+
 
 long millis() {
 	timespec ts;
