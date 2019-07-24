@@ -37,18 +37,30 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="door.cpp" />
+    <ClCompile Include="ledbuzzer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mcp9600.cpp" />
+    <ClCompile Include="monitor.cpp" />
+    <ClCompile Include="notification.cpp" />
+    <ClCompile Include="trigger.cpp" />
+    <ClCompile Include="utils.cpp" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="door.h" />
+    <ClInclude Include="ledbuzzer.h" />
     <ClInclude Include="mcp9600.h" />
+    <ClInclude Include="monitor.h" />
+    <ClInclude Include="notification.h" />
+    <ClInclude Include="trigger.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalOptions>-Werror=implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=implicit-function-declaration -fno-rtti %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <LibraryDependencies>applibs;pthread;gcc_s;c</LibraryDependencies>
