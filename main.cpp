@@ -62,10 +62,8 @@ int main(void)
 		ledBuzzer.run();
 		nanosleep(&sleepTime, NULL); // sleep for 250ms
 
-		if (tempSensor.testTermocouple() == -1)
-		{
-			quit = true;
-		}
+		float temperature = tempSensor.getTemprature();
+		Log_Debug("Temperature: %f\n", temperature);
 	}
 
 	return 0; 
