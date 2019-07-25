@@ -21,6 +21,7 @@
 #include "door.h"
 #include "ledbuzzer.h"
 #include "mcp9600.h"
+#include "Adafruit_LEDBackpack.h"
 
 constexpr int DOOR_PIN = 8;
 constexpr int RED_PIN = 5;
@@ -31,6 +32,12 @@ constexpr int MS_PER_MIN = 60000;
 constexpr int DOOR_TIMEOUT_MS = MS_PER_MIN / 6;
 
 constexpr struct timespec sleepTime = { 0, 250000000 }; //250ms
+
+float toFarenheit(float c) {
+	float f; 
+	f = c * 1.8f + 32; 
+	return f; 
+}
 
 int main(void)
 {
@@ -57,6 +64,9 @@ int main(void)
 		quit = true;
 	}
 
+	Adafruit_7segment sevenSegment(1);
+	sevenSegment.begin(0x70);
+
 	while (!quit) {
 		monitor.run(); 
 		ledBuzzer.run();
@@ -64,6 +74,8 @@ int main(void)
 
 		float temperature = tempSensor.getTemprature();
 		Log_Debug("Temperature: %f\n", temperature);
+		sevenSegment.print(toFarenheit(temperature));
+		sevenSegment.writeDisplay();
 	}
 
 	return 0; 

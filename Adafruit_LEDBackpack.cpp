@@ -20,6 +20,8 @@
 
 #include "Adafruit_LEDBackpack.h"
 #include <string.h>
+#include <applibs/log.h>
+#include <errno.h>
 
 #ifndef _BV
 #define _BV(bit) (1<<(bit))
@@ -71,11 +73,29 @@ Adafruit_LEDBackpack::Adafruit_LEDBackpack(I2C_InterfaceId interface)
 
 void Adafruit_LEDBackpack::begin(uint8_t _addr = 0x70) {
 	fd = I2CMaster_Open(interfaceId);
+	if (fd < 0) {
+		Log_Debug("Could not open I2C Device: %d\n", errno);
+	}
+	
 	i2c_addr = _addr;
-	I2CMaster_SetBusSpeed(fd, I2C_BUS_SPEED_STANDARD);
-	I2CMaster_SetTimeout(fd, 100);
+
+	int ret = 0; 
+	ret = I2CMaster_SetBusSpeed(fd, I2C_BUS_SPEED_STANDARD);
+	if (ret < 0) {
+		Log_Debug("Could not set I2C_BUS_SPEED_STANDARD\n");
+	}
+
+	ret = I2CMaster_SetTimeout(fd, 100);
+	if (ret < 0) {
+		Log_Debug("Could not set I2C timeout\n");
+	}
+
 	const uint8_t osc_on = 0x21; 
-	I2CMaster_Write(fd, i2c_addr, &osc_on, sizeof(osc_on));
+	ret = I2CMaster_Write(fd, i2c_addr, &osc_on, sizeof(osc_on));
+	if (ret < 0) {
+		Log_Debug("Could not set Oscillator On\n");
+	}
+
 	blinkRate(HT16K33_BLINK_OFF);
 	setBrightness(15); // max brightness
 }

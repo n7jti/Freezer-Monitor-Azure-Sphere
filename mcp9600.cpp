@@ -55,8 +55,8 @@ uint16_t CMcp9600::read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 		Log_Debug("Read16 Failed\n");
 	}
 	uint16_t result = 0x0000;
-	result = result |((uint16_t)value[0] << 8);
-	result = result | (uint16_t)value[1];
+	result = static_cast<uint16_t>(result | (static_cast<uint16_t>(value[0]) << 8));
+	result = static_cast<uint16_t>(result | static_cast<uint16_t>(value[1]));
 	return result;
 }
 
@@ -68,7 +68,7 @@ bool CMcp9600::CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t
 		Log_Debug("ERROR: %s: errno=%d (%s)\n", desc, errno, strerror(errno));
 		return false;
 	}
-	if (actualBytes != (ssize_t)expectedBytes) {
+	if (actualBytes != static_cast<ssize_t>(expectedBytes)) {
 		Log_Debug("ERROR: %s: transferred %zd bytes; expected %zd\n", desc, actualBytes,
 			expectedBytes);
 		return false;
@@ -155,7 +155,7 @@ bool CMcp9600::setAdcResolution(MCP9600_ADC_RES res)
 {
 	uint8_t reg = MCP9600_REG_DEVICE_CONFIG;
 	uint8_t previousData = read8(_fd, _address, reg);
-	uint8_t dataToWrite = previousData | (uint8_t)(res&0x60);
+	uint8_t dataToWrite = previousData | static_cast<uint8_t>(res & 0x60);
 	if (!write8(_fd, _address, reg, dataToWrite))
 	{
 		return false;
