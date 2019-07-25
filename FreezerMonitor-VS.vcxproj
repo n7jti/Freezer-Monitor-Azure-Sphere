@@ -37,6 +37,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="Adafruit_LEDBackpack.cpp" />
     <ClCompile Include="door.cpp" />
     <ClCompile Include="ledbuzzer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -48,6 +49,7 @@
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Adafruit_LEDBackpack.h" />
     <ClInclude Include="door.h" />
     <ClInclude Include="ledbuzzer.h" />
     <ClInclude Include="mcp9600.h" />
