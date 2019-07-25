@@ -63,7 +63,6 @@ class CMcp9600 {
 public: 
 	CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address);
 	bool mcp9600_begin();
-	int testTermocouple();
 	bool setThermocoupleType(MCP9600_TYPE type);
 	MCP9600_TYPE getThermocoupleType();
 	bool setFilterBits(uint8_t bits);
@@ -71,14 +70,15 @@ public:
 	bool setAdcResolution(MCP9600_ADC_RES res);
 	MCP9600_ADC_RES getAdcResolution();
 	float getTemprature();
-	static bool CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes);
-	static bool write8(int fd, I2C_DeviceAddress address, uint8_t reg, uint8_t value);
-	static uint8_t read8(int fd, I2C_DeviceAddress address, uint8_t reg);
-	static uint16_t read16(int fd, I2C_DeviceAddress address, uint8_t reg);
 	~CMcp9600();
 	
 private:
 	I2C_InterfaceId _id;
 	I2C_DeviceAddress _address;
 	int _fd;
+
+	static bool CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes);
+	static bool write8(int fd, I2C_DeviceAddress address, uint8_t reg, uint8_t value);
+	static uint8_t read8(int fd, I2C_DeviceAddress address, uint8_t reg);
+	static uint16_t read16(int fd, I2C_DeviceAddress address, uint8_t reg);
 };

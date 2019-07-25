@@ -1,3 +1,6 @@
+/*
+For using MCP9600 with the Azure Sphere
+*/
 #include "mcp9600.h" 
 
 CMcp9600::CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address) 
@@ -6,7 +9,10 @@ CMcp9600::CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address)
 {
 
 }
-
+// Private:
+/*
+Write 8 bits to the I2C Address
+*/
 bool CMcp9600::write8(int fd, I2C_DeviceAddress address, uint8_t reg, uint8_t value)
 {
 	uint8_t valueToWrite[2];
@@ -22,6 +28,9 @@ bool CMcp9600::write8(int fd, I2C_DeviceAddress address, uint8_t reg, uint8_t va
 	return true;
 }
 
+/*
+Read 8 bits from the I2C Address
+*/
 uint8_t CMcp9600::read8(int fd, I2C_DeviceAddress address, uint8_t reg)
 {
 	uint8_t value = 0xFF;
@@ -33,6 +42,10 @@ uint8_t CMcp9600::read8(int fd, I2C_DeviceAddress address, uint8_t reg)
 	return value;
 }
 
+
+/*
+Read 16 bits from the I2C Address
+*/
 uint16_t CMcp9600::read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 {
 	uint8_t value[2];
@@ -41,15 +54,30 @@ uint16_t CMcp9600::read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 	{
 		Log_Debug("Read16 Failed\n");
 	}
-	uint16_t result = 0;
-	Log_Debug("Array 1: 0x%02x\n", value[0]);
-	Log_Debug("Array 2: 0x%02x\n", value[1]);
-	result = (value[0] << 8) | result;
-	result = value[1] | result;
+	uint16_t result = 0x0000;
+	result = result |((uint16_t)value[0] << 8);
+	result = result | (uint16_t)value[1];
 	return result;
 }
 
 /*
+Check bits transfered to and from I2C
+*/
+bool CMcp9600::CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes) {
+	if (actualBytes < 0) {
+		Log_Debug("ERROR: %s: errno=%d (%s)\n", desc, errno, strerror(errno));
+		return false;
+	}
+	if (actualBytes != (ssize_t)expectedBytes) {
+		Log_Debug("ERROR: %s: transferred %zd bytes; expected %zd\n", desc, actualBytes,
+			expectedBytes);
+		return false;
+	}
+	return true;
+}
+
+/*
+Didn't do the Job
 uint16_t CMcp9600::read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 {
 	uint16_t value = 0xFFFF;
@@ -61,6 +89,9 @@ uint16_t CMcp9600::read16(int fd, I2C_DeviceAddress address, uint8_t reg)
 	return value;
 }*/
 
+/*
+Open and configure the I2C master interface
+*/
 bool CMcp9600::mcp9600_begin() {
 	_fd = I2CMaster_Open(_id);
 	if (_fd < 0)
@@ -81,42 +112,14 @@ bool CMcp9600::mcp9600_begin() {
 	return true;
 }
 
-int CMcp9600::testTermocouple()
-{
-	// Test Device Id
-	uint8_t expectedDeviceId = 0x40;
-	uint8_t actualDeviceId;
 
-	actualDeviceId = read8(_fd, _address, MCP9600_REG_DEVICEID);
-	Log_Debug("Actual Value=%d\n", actualDeviceId);
-
-	if (actualDeviceId != expectedDeviceId) {
-		Log_Debug("ERROR: Unexpected value.\n");
-		return -1;
-	}
-
-	// Test Writing to the thermocouple the Thermocouple
-	uint8_t valueToWrite = 0x77;
-	uint8_t valueReadBack;
-
-	if (write8(_fd, _address, MCP9600_REG_SENSOR_CONFIG, valueToWrite)) 
-	{
-		valueReadBack = read8(_fd, _address, MCP9600_REG_SENSOR_CONFIG);
-		Log_Debug("Value Read Back=%d\n", valueReadBack);
-	}
-	else
-	{
-		Log_Debug("ERROR: Reading back the value\n");
-		return -1;
-	}
-	return 1;
-}
-
+/*
+Set the Thermocouple Type
+*/
 bool CMcp9600::setThermocoupleType(MCP9600_TYPE type)
 {	
-	uint8_t reg = MCP9600_REG_SENSOR_CONFIG;
 	uint8_t dataToWrite = type;
-	if (!write8(_fd, _address, reg, dataToWrite))
+	if (!write8(_fd, _address, MCP9600_REG_SENSOR_CONFIG, dataToWrite))
 	{
 		return false;
 	}
@@ -128,11 +131,13 @@ MCP9600_TYPE CMcp9600::getThermocoupleType()
 	return  MCP9600_TYPE_K; 
 }
 
+/*
+Set Filter Level
+*/
 bool CMcp9600::setFilterBits(uint8_t bits) {
-	uint8_t reg = MCP9600_REG_SENSOR_CONFIG;
-	uint8_t previousData = read8(_fd, _address, reg);
+	uint8_t previousData = read8(_fd, _address, MCP9600_REG_SENSOR_CONFIG);
 	uint8_t dataToWrite = (previousData&0xf0)|bits;
-	if (!write8(_fd, _address, reg, dataToWrite))
+	if (!write8(_fd, _address, MCP9600_REG_SENSOR_CONFIG, dataToWrite))
 	{
 		return false;
 	}
@@ -143,11 +148,14 @@ uint8_t CMcp9600::getFilterBits() {
 	return 0x4;
 }
 
+/*
+Set Analogue to Digital Converter Resolution
+*/
 bool CMcp9600::setAdcResolution(MCP9600_ADC_RES res)
 {
 	uint8_t reg = MCP9600_REG_DEVICE_CONFIG;
 	uint8_t previousData = read8(_fd, _address, reg);
-	uint8_t dataToWrite = previousData | (res&0x60);
+	uint8_t dataToWrite = previousData | (uint8_t)(res&0x60);
 	if (!write8(_fd, _address, reg, dataToWrite))
 	{
 		return false;
@@ -160,43 +168,20 @@ MCP9600_ADC_RES CMcp9600::getAdcResolution()
 	return MCP9600_ADC_RES_18;
 }
 
-// Get Temperature using Hot Junction Themperature Register
+
+/*
+Get Temperature using Hot Junction Themperature Register
+*/
 float CMcp9600::getTemprature()
 {
 	float result;
 	uint8_t reg = MCP9600_REG_HOT_JUNCTION;
 	uint16_t tempBits = read16(_fd, _address, reg);
-	Log_Debug("Bits Returned from Hot Junction Register: 0x%02x\n", tempBits);
-	/*
-	if (tempBits & 0x8000)
-	{
-		result = (((tempBits >> 8) * 16.0) + ((tempBits & 0x00ff) / 16.0)) - 4096.0;
-	}
-	else 
-	{
-		result = ((tempBits >> 8) * 16.0) + ((tempBits & 0x00ff) / 16.0);
-	}*/
-		
 	result = tempBits;
-	result *= 0.0625;  // 0.0625*C per LSB!
-	Log_Debug("Bits After Conversion to Celsius: %f\n", result);
+	result *= 0.0625f;
 	return result;
 }
 
-
-
-bool CMcp9600::CheckTransferSize(const char* desc, size_t expectedBytes, ssize_t actualBytes) {
-	if (actualBytes < 0) {
-		Log_Debug("ERROR: %s: errno=%d (%s)\n", desc, errno, strerror(errno));
-		return false;
-	}
-	if (actualBytes != (ssize_t)expectedBytes) {
-		Log_Debug("ERROR: %s: transferred %zd bytes; expected %zd\n", desc, actualBytes,
-			expectedBytes);
-		return false;
-	}
-	return true;
-}
 
 CMcp9600::~CMcp9600()
 {
