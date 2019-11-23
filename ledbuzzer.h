@@ -1,13 +1,14 @@
 #pragma once
 
 // ledbuzzer.h
-
+#include <applibs/pwm.h>
 #include "notification.h"
 
 class LedBuzzer : public Notification
 {
 public:
-    LedBuzzer(Monitor &monitor, int redpin, int greenpin, int buzzerpin);
+    LedBuzzer(Monitor &monitor, int redpin, int greenpin, PWM_ControllerId buzzer_controller, PWM_ChannelId buzzer_channel);
+	~LedBuzzer();
     virtual bool begin();
     void run();
 protected:
@@ -15,11 +16,15 @@ protected:
     virtual void onYellow(bool isNew);
     virtual void onGreen(bool isNew); 
 private:
+	void Tone(bool enabled);
+
     int _redpin; 
 	int _redfd; 
     int _greenpin;
 	int _greenfd; 
-    int _buzzerpin; 
+
+    PWM_ControllerId _buzzercontroller; 
+	PWM_ChannelId _buzzerchannel;
 	int _buzzerfd; 
 
     
