@@ -13,9 +13,9 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
 
 #include <applibs/log.h>
-#include <applibs/gpio.h>
 
 #include "monitor.h"
 #include "door.h"
@@ -23,15 +23,19 @@
 #include "mcp9600.h"
 #include "Adafruit_LEDBackpack.h"
 
-constexpr int DOOR_PIN = 8;
-constexpr int RED_PIN = 5;
-constexpr int GREEN_PIN = 6;
-constexpr int BUZZER_PIN = 4;
+constexpr int DOOR_PIN = 30;
+constexpr int RED_PIN = 34;
+constexpr int GREEN_PIN = 32;
+constexpr PWM_ControllerId BUZZER_CONTROLLER = 1;
+constexpr PWM_ChannelId BUZZER_CHANNEL = 0;
 
 constexpr int MS_PER_MIN = 60000;
 constexpr int DOOR_TIMEOUT_MS = MS_PER_MIN / 6;
 
 constexpr struct timespec sleepTime = { 0, 250000000 }; //250ms
+
+// Termination state
+static volatile sig_atomic_t quit = false;
 
 float toFarenheit(float c) {
 	float f; 
@@ -39,10 +43,27 @@ float toFarenheit(float c) {
 	return f; 
 }
 
+/// <summary>
+///     Signal handler for termination requests. This handler must be async-signal-safe.
+/// </summary>
+static void TerminationHandler(int signalNumber)
+{
+	// Don't use Log_Debug here, as it is not guaranteed to be async-signal-safe.
+	quit = true;
+}
+
+void register_termination_handler() {
+	// Register a SIGTERM handler for termination requests
+	struct sigaction action;
+	memset(&action, 0, sizeof(struct sigaction));
+	action.sa_handler = TerminationHandler;
+	sigaction(SIGTERM, &action, NULL);
+}
+
 int main(void)
 {
 	Log_Debug("Starting CMake Hello World application...\n");
-	bool quit = false; 
+	register_termination_handler();
 
 	Door door(DOOR_PIN);
 
@@ -52,7 +73,7 @@ int main(void)
 		quit = true; 
 	}
 
-	LedBuzzer ledBuzzer(monitor, RED_PIN, GREEN_PIN, BUZZER_PIN);
+	LedBuzzer ledBuzzer(monitor, RED_PIN, GREEN_PIN, BUZZER_CONTROLLER, BUZZER_CHANNEL);
 	if (!ledBuzzer.begin()) {
 		Log_Debug("Monitor Failed to start!\n");
 		quit = true; 
@@ -64,7 +85,7 @@ int main(void)
 		quit = true;
 	}
 
-	Adafruit_7segment sevenSegment(1);
+	Adafruit_7segment sevenSegment(0);
 	sevenSegment.begin(0x70);
 
 	while (!quit) {
