@@ -64,12 +64,12 @@ public:
 	CMcp9600(I2C_InterfaceId id, I2C_DeviceAddress address);
 	bool mcp9600_begin();
 	bool setThermocoupleType(MCP9600_TYPE type);
-	MCP9600_TYPE getThermocoupleType();
-	bool setFilterBits(uint8_t bits);
-	uint8_t getFilterBits();
+	MCP9600_TYPE getThermocoupleType() const;
+	bool setFilterCoefficients(uint8_t bits);
+	uint8_t getFilterCoefficients() const;
 	bool setAdcResolution(MCP9600_ADC_RES res);
 	MCP9600_ADC_RES getAdcResolution();
-	float getTemprature();
+	float getTemprature() const;
 	~CMcp9600();
 	
 private:

@@ -45,6 +45,9 @@
     <ClInclude Include="Adafruit_LEDBackpack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="epoll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Adafruit_LEDBackpack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="epoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

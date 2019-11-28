@@ -1,3 +1,6 @@
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
+
 #pragma once
 
 // door.h

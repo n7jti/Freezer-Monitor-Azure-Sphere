@@ -1,4 +1,6 @@
-// door
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
+
 #include "door.h"
 #include <string.h>
 #include <applibs/gpio.h>

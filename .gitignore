@@ -4,3 +4,4 @@
 /.vs
 /bin/ARM/Debug
 /obj/ARM/Debug
+app.manifest.json

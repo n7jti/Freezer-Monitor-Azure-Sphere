@@ -1,6 +1,7 @@
-#pragma once
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
 
-// (C) Alan Ludwig 2019 All Rights 
+#pragma once
 
 #include<applibs/i2c.h>
 

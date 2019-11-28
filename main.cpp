@@ -13,6 +13,9 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
+
 #include <signal.h>
 
 #include <applibs/log.h>
@@ -62,7 +65,7 @@ void register_termination_handler() {
 
 int main(void)
 {
-	Log_Debug("Starting CMake Hello World application...\n");
+	Log_Debug("Starting Freezer Monitor!...\n");
 	register_termination_handler();
 
 	Door door(DOOR_PIN);
@@ -75,7 +78,7 @@ int main(void)
 
 	LedBuzzer ledBuzzer(monitor, RED_PIN, GREEN_PIN, BUZZER_CONTROLLER, BUZZER_CHANNEL);
 	if (!ledBuzzer.begin()) {
-		Log_Debug("Monitor Failed to start!\n");
+		Log_Debug("LedBuzzer Failed to start!\n");
 		quit = true; 
 	}
 
@@ -84,6 +87,9 @@ int main(void)
 		Log_Debug("Temp Sensor Failed to start!\n");
 		quit = true;
 	}
+
+	tempSensor.setAdcResolution(MCP9600_ADC_RES_14);
+	tempSensor.setFilterCoefficients(1);
 
 	Adafruit_7segment sevenSegment(0);
 	sevenSegment.begin(0x70);

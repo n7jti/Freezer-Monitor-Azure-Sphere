@@ -1,4 +1,5 @@
-// trigger.cpp
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
 
 #include "trigger.h"
 

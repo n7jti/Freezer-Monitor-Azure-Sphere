@@ -1,4 +1,5 @@
-// ledbuzzer.cpp
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
 
 #include <unistd.h>
 #include <applibs/gpio.h>
