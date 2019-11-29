@@ -152,7 +152,7 @@ bool CMcp9600::setAdcResolution(MCP9600_ADC_RES res)
 	return true;
 }
 
-MCP9600_ADC_RES CMcp9600::getAdcResolution()
+MCP9600_ADC_RES CMcp9600::getAdcResolution() const
 {
 	uint8_t reg = MCP9600_REG_DEVICE_CONFIG;
 	uint8_t previousData = read8(_fd, _address, reg);
@@ -167,9 +167,8 @@ float CMcp9600::getTemprature() const
 {
 	float result;
 	uint8_t reg = MCP9600_REG_HOT_JUNCTION;
-	uint16_t tempBits = read16(_fd, _address, reg);
-	float sign = (tempBits & 0x8000) ? -1.0f : 1.0f;
-	result = sign * static_cast<float>(tempBits & 0x7FFF) * 0.0625f;
+	int16_t tempBits = static_cast<int16_t>(read16(_fd, _address, reg));
+	result = 0.0625f * tempBits; 
 	return result;
 }
 

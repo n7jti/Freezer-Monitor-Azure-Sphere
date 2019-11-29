@@ -16,12 +16,13 @@ class EventData {
 public:
 	EventHandler eventHandler; 
 	int fd; 
+	void* context; 
 };
 
-class Timer {
+class EPollTimer {
 public:
-	Timer();
-	~Timer();
+	EPollTimer();
+	~EPollTimer();
 
 	int Open(const struct timespec* period);
 	void Close(); 

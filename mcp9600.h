@@ -68,7 +68,7 @@ public:
 	bool setFilterCoefficients(uint8_t bits);
 	uint8_t getFilterCoefficients() const;
 	bool setAdcResolution(MCP9600_ADC_RES res);
-	MCP9600_ADC_RES getAdcResolution();
+	MCP9600_ADC_RES getAdcResolution() const;
 	float getTemprature() const;
 	~CMcp9600();
 	

@@ -9,18 +9,18 @@
 #include "epoll.h"
 
 
-Timer::Timer()
+EPollTimer::EPollTimer()
 	: _timerFd(-1)
 {
 
 }
 
-Timer::~Timer()
+EPollTimer::~EPollTimer()
 {
 	Close(); 
 }
 
-int Timer::Open(const struct timespec* period)
+int EPollTimer::Open(const struct timespec* period)
 {
 	Close(); 
 
@@ -36,7 +36,7 @@ int Timer::Open(const struct timespec* period)
 	return SetToPeriod(period); 	 
 }
 
-void Timer::Close()
+void EPollTimer::Close()
 {
 	if (_timerFd >= 0)
 	{
@@ -45,12 +45,12 @@ void Timer::Close()
 	}
 }
 
-int Timer::Get() 
+int EPollTimer::Get()
 { 
 	return _timerFd; 
 }
 
-int Timer::SetToPeriod(const struct timespec* period)
+int EPollTimer::SetToPeriod(const struct timespec* period)
 {
 	struct itimerspec newValue = { .it_interval = *period, .it_value = *period };
 
@@ -62,7 +62,7 @@ int Timer::SetToPeriod(const struct timespec* period)
 	return 0;
 }
 
-int Timer::SetToSingleExpiry(const struct timespec* expiry)
+int EPollTimer::SetToSingleExpiry(const struct timespec* expiry)
 {
 	struct itimerspec newValue = { .it_interval = {}, .it_value = *expiry };
 
@@ -74,7 +74,7 @@ int Timer::SetToSingleExpiry(const struct timespec* expiry)
 	return 0;
 
 }
-int Timer::ConsumeEvent()
+int EPollTimer::ConsumeEvent()
 {
 	uint64_t timerData = 0;
 

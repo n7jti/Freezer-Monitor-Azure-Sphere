@@ -25,6 +25,7 @@
 #include "ledbuzzer.h"
 #include "mcp9600.h"
 #include "Adafruit_LEDBackpack.h"
+#include "epoll.h"
 
 constexpr int DOOR_PIN = 30;
 constexpr int RED_PIN = 34;
@@ -63,29 +64,107 @@ void register_termination_handler() {
 	sigaction(SIGTERM, &action, NULL);
 }
 
+
+class MainTimer {
+public:
+	MainTimer()
+		: _door(DOOR_PIN)
+		, _monitor(&_door, DOOR_TIMEOUT_MS)
+		, _ledBuzzer(_monitor, RED_PIN, GREEN_PIN, BUZZER_CONTROLLER, BUZZER_CHANNEL)
+	{
+		_eventData.eventHandler = CallbackWrapper;
+		_eventData.context = this;
+	}
+
+	int RegisterEventHandler(Epoll& epoll)
+	{
+		return epoll.RegisterEventHandler(_timer.Get(), &_eventData, EPOLLIN);
+	}
+
+	bool begin() {
+		if (!_monitor.begin()) {
+			Log_Debug("Monitor Failed to start!\n");
+			return false;
+		}
+
+		if (!_ledBuzzer.begin()) {
+			Log_Debug("LedBuzzer Failed to start!\n");
+			return false;
+		}
+
+		struct timespec mainTimerPeriod = { 0, 500 * 1000 * 1000 };  // 0 seconds, 250 miliseconds
+		int ret = _timer.Open(&mainTimerPeriod);
+		if ( ret < 0){
+			Log_Debug("Failed to open timer! %d", ret);
+			return false; 
+		}
+
+		return true;
+	}
+
+	void run() {
+		_monitor.run();
+		_ledBuzzer.run(); 
+	}
+
+	static void CallbackWrapper(EventData* eventData)
+	{
+		MainTimer* pThis = reinterpret_cast<MainTimer*>(eventData->context);
+		pThis->Callback(eventData);
+	}
+
+	void Callback(EventData* eventData) {
+		run(); 
+		if (_timer.ConsumeEvent() != 0)
+		{
+			quit = true;
+		}
+		return;
+	}
+
+
+private:
+	Door _door;
+	Monitor _monitor;
+	LedBuzzer _ledBuzzer;
+	EPollTimer _timer; 
+	EventData _eventData;
+
+};
+
+
+
 int main(void)
 {
 	Log_Debug("Starting Freezer Monitor!...\n");
 	register_termination_handler();
 
-	Door door(DOOR_PIN);
-
-	Monitor monitor(&door, DOOR_TIMEOUT_MS);
-	if (!monitor.begin()) {
-		Log_Debug("Monitor Failed to start!\n");
-		quit = true; 
+	MainTimer mainTimer; 
+	
+	if (!mainTimer.begin())
+	{
+		Log_Debug("Main Timer class failed to start!\n");
+		return 0;
 	}
 
-	LedBuzzer ledBuzzer(monitor, RED_PIN, GREEN_PIN, BUZZER_CONTROLLER, BUZZER_CHANNEL);
-	if (!ledBuzzer.begin()) {
-		Log_Debug("LedBuzzer Failed to start!\n");
-		quit = true; 
+	Epoll epoll;
+	int ret = epoll.Open(); 
+	if (ret < 0)
+	{
+		Log_Debug("Failed to Open Epoll: %d", ret);
+		return 0;
+	}
+
+	ret = mainTimer.RegisterEventHandler(epoll);
+	if (ret < 0) {
+		Log_Debug("Failed to register event handler.");
+		return 0;
 	}
 
 	CMcp9600 tempSensor(0, MCP9600_ADDR);
 	if (!tempSensor.mcp9600_begin()) {
 		Log_Debug("Temp Sensor Failed to start!\n");
-		quit = true;
+		return 0; 
 	}
 
 	tempSensor.setAdcResolution(MCP9600_ADC_RES_14);
@@ -95,13 +174,15 @@ int main(void)
 	sevenSegment.begin(0x70);
 
 	while (!quit) {
-		monitor.run(); 
-		ledBuzzer.run();
-		nanosleep(&sleepTime, NULL); // sleep for 250ms
+		ret = epoll.WaitForEventAndCallHandler(); 
+		if (ret < 0)
+		{
+			break; 
+		}
 
 		float temperature = tempSensor.getTemprature();
-		Log_Debug("Temperature: %f\n", temperature);
-		sevenSegment.print(toFarenheit(temperature));
+		Log_Debug("Temperature: %f C  %f F\n", temperature, toFarenheit(temperature));
+		sevenSegment.print(toFarenheit(temperature), 1);
 		sevenSegment.writeDisplay();
 	}
 
