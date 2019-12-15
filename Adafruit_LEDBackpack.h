@@ -23,8 +23,8 @@
 
 #include <applibs/i2c.h>
 
-#define LED_ON 1
-#define LED_OFF 0
+//#define LED_ON 1
+//#define LED_OFF 0
 
 #define LED_RED 1
 #define LED_YELLOW 2
@@ -50,15 +50,12 @@
 class Adafruit_LEDBackpack {
 public:
 	Adafruit_LEDBackpack(I2C_InterfaceId interface);
-	void begin(uint8_t _addr);
+	void begin(uint8_t _addr = 0x70);
 	void setBrightness(uint8_t b);
 	void blinkRate(uint8_t b);
 	void writeDisplay(void);
 	void clear(void);
-
 	uint16_t displaybuffer[8];
-
-	void init(uint8_t a);
 protected:
 	I2C_InterfaceId interfaceId;
 	int fd;

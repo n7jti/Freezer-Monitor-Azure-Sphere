@@ -22,8 +22,9 @@
 
 #include "monitor.h"
 #include "door.h"
-#include "ledbuzzer.h"
-#include "mcp9600.h"
+#include "led.h"
+#include "buzzer.h"
+#include "temp.h"
 #include "Adafruit_LEDBackpack.h"
 #include "epoll.h"
 
@@ -68,9 +69,12 @@ void register_termination_handler() {
 class MainTimer {
 public:
 	MainTimer()
-		: _door(DOOR_PIN)
-		, _monitor(&_door, DOOR_TIMEOUT_MS)
-		, _ledBuzzer(_monitor, RED_PIN, GREEN_PIN, BUZZER_CONTROLLER, BUZZER_CHANNEL)
+		: _door(DOOR_PIN, DOOR_TIMEOUT_MS)
+		, _temp(0, MCP9600_ADDR)
+		, _red_led(RED_PIN)
+		, _green_led(GREEN_PIN)
+		, _buzzer(BUZZER_CONTROLLER, BUZZER_CHANNEL, 200)
+		, _sevenSegment(0)
 	{
 		_eventData.eventHandler = CallbackWrapper;
 		_eventData.context = this;
@@ -82,15 +86,32 @@ public:
 	}
 
 	bool begin() {
-		if (!_monitor.begin()) {
-			Log_Debug("Monitor Failed to start!\n");
+		if (!_door.begin()) {
+			Log_Debug("Door Failed to start!\n");
 			return false;
 		}
 
-		if (!_ledBuzzer.begin()) {
-			Log_Debug("LedBuzzer Failed to start!\n");
+		if (!_temp.begin()) {
+			Log_Debug("Temp Failed to start!\n");
 			return false;
 		}
+
+		if (!_red_led.begin()) {
+			Log_Debug("Red LED Failed to start!\n");
+			return false;
+		}
+
+		if (!_green_led.begin()) {
+			Log_Debug("Green LED Failed to start!\n");
+			return false;
+		}
+
+		if (!_buzzer.begin()) {
+			Log_Debug("Buzzer Failed to start!\n");
+			return false;
+		}
+
+		_sevenSegment.begin();
 
 		struct timespec mainTimerPeriod = { 0, 500 * 1000 * 1000 };  // 0 seconds, 250 miliseconds
 		int ret = _timer.Open(&mainTimerPeriod);
@@ -102,9 +123,37 @@ public:
 		return true;
 	}
 
+
 	void run() {
-		_monitor.run();
-		_ledBuzzer.run(); 
+		Door::DOOR_STATE door_state = _door.run();
+		bool temp_trigger = _temp.run(); 
+
+		switch (door_state) {
+		case Door::DOOR_GREEN:
+			_red_led.setState(Led::LED_OFF);
+			_green_led.setState(Led::LED_ON);
+			_buzzer.sound(false);
+			break;
+		case Door::DOOR_YELLOW:
+			_red_led.setState(Led::LED_ON);
+			_green_led.setState(Led::LED_OFF);
+			_buzzer.sound(false);
+			break;
+		case Door::DOOR_RED:
+			_red_led.setState(Led::LED_BLINK);
+			_green_led.setState(Led::LED_OFF);
+			_buzzer.sound(true);
+			break;
+		}
+
+		_red_led.run();
+		_green_led.run();
+		
+		_sevenSegment.print(_temp.getLastTemp() , 1);
+		_sevenSegment.writeDisplay();
+
+		(void)temp_trigger; 
+
 	}
 
 	static void CallbackWrapper(EventData* eventData)
@@ -125,11 +174,14 @@ public:
 
 private:
 	Door _door;
-	Monitor _monitor;
-	LedBuzzer _ledBuzzer;
+	Temp _temp; 
+	Led _red_led;
+	Led _green_led;
+	Buzzer _buzzer;
+	Adafruit_7segment _sevenSegment;
 	EPollTimer _timer; 
 	EventData _eventData;
-
+	
 };
 
 
@@ -161,29 +213,12 @@ int main(void)
 		return 0;
 	}
 
-	CMcp9600 tempSensor(0, MCP9600_ADDR);
-	if (!tempSensor.mcp9600_begin()) {
-		Log_Debug("Temp Sensor Failed to start!\n");
-		return 0; 
-	}
-
-	tempSensor.setAdcResolution(MCP9600_ADC_RES_14);
-	tempSensor.setFilterCoefficients(1);
-
-	Adafruit_7segment sevenSegment(0);
-	sevenSegment.begin(0x70);
-
 	while (!quit) {
 		ret = epoll.WaitForEventAndCallHandler(); 
 		if (ret < 0)
 		{
 			break; 
 		}
-
-		float temperature = tempSensor.getTemprature();
-		Log_Debug("Temperature: %f C  %f F\n", temperature, toFarenheit(temperature));
-		sevenSegment.print(toFarenheit(temperature), 1);
-		sevenSegment.writeDisplay();
 	}
 
 	return 0; 

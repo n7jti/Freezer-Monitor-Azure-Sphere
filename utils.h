@@ -6,3 +6,4 @@
 #include<applibs/i2c.h>
 
 long millis();
+void safe_close_fd(int& fd);
