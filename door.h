@@ -4,7 +4,6 @@
 #pragma once
 
 // door.h
-#include "trigger.h"
 
 class Door {
 public:

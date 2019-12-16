@@ -20,7 +20,6 @@
 
 #include <applibs/log.h>
 
-#include "monitor.h"
 #include "door.h"
 #include "led.h"
 #include "buzzer.h"
