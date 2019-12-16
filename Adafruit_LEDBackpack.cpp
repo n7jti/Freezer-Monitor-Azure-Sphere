@@ -71,7 +71,7 @@ Adafruit_LEDBackpack::Adafruit_LEDBackpack(I2C_InterfaceId interface)
 {
 }
 
-void Adafruit_LEDBackpack::begin(uint8_t _addr = 0x70) {
+void Adafruit_LEDBackpack::begin(uint8_t _addr) {
 	fd = I2CMaster_Open(interfaceId);
 	if (fd < 0) {
 		Log_Debug("Could not open I2C Device: %d\n", errno);
@@ -101,8 +101,7 @@ void Adafruit_LEDBackpack::begin(uint8_t _addr = 0x70) {
 }
 
 void Adafruit_LEDBackpack::writeDisplay(void) {
-	I2CMaster_Write(fd, i2c_addr, reinterpret_cast<uint8_t*>(displaybuffer), sizeof(displaybuffer));
-	uint8_t data[17]; 
+	uint8_t data[1 + sizeof(displaybuffer)];
 	data[0] = 0x00;
 	memcpy(data + 1, displaybuffer, sizeof(displaybuffer));
 	I2CMaster_Write(fd, i2c_addr, data, sizeof(data));

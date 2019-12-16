@@ -39,23 +39,18 @@
   <ItemGroup>
     <ClCompile Include="Adafruit_LEDBackpack.cpp" />
     <ClCompile Include="door.cpp" />
-    <ClCompile Include="ledbuzzer.cpp" />
+    <ClCompile Include="epoll.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mcp9600.cpp" />
-    <ClCompile Include="monitor.cpp" />
-    <ClCompile Include="notification.cpp" />
-    <ClCompile Include="trigger.cpp" />
     <ClCompile Include="utils.cpp" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Adafruit_LEDBackpack.h" />
     <ClInclude Include="door.h" />
+    <ClInclude Include="epoll.h" />
     <ClInclude Include="ledbuzzer.h" />
     <ClInclude Include="mcp9600.h" />
-    <ClInclude Include="monitor.h" />
-    <ClInclude Include="notification.h" />
-    <ClInclude Include="trigger.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

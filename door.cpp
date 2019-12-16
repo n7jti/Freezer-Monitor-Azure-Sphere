@@ -1,13 +1,18 @@
-// door
+// (c) Alan Ludwig. All Rights Reserved
+// Licensed under the MIT license
+
 #include "door.h"
 #include <string.h>
 #include <applibs/gpio.h>
 #include <applibs/log.h>
+#include "utils.h"
 
-Door::Door(int pin)
-  : Trigger()
-  , _pin(pin)
-  , _fd(-1)
+Door::Door(int pin, long timeout)
+	:_pin(pin)
+	, _fd(-1)
+	, _timeout(timeout)
+	, _state(DOOR_GREEN)
+	, _stateStartMs(millis()) 
 {
   
 }
@@ -18,7 +23,7 @@ bool Door::begin()
   return _fd >= 0; 
 }
 
-bool Door::isTriggered()
+bool Door::isOpen()
 {
 	GPIO_Value_Type val = GPIO_Value_Low; 
   // The magnetic switch connects the pin to ground.
@@ -32,26 +37,46 @@ bool Door::isTriggered()
   return val == GPIO_Value_High;
 }
 
-int Door::getStatus(char* buffer, int length)
+
+Door::DOOR_STATE Door::getState()
 {
-  int len; 
-  constexpr char msgOpen[] = "Freezer%20is%20OPEN%21%0A";
-  constexpr char msgClosed[] = "Freezer%20is%20CLOSED.%0A";
-  if (isTriggered()) {
-    strncpy(buffer, msgOpen, length);
-    len = strlen(msgOpen);
-    if (length < len){
-      len = length; 
-    }
-  }
-  else {
-    // copy Freezer is Closed; 
-    strncpy(buffer, msgClosed, length);
-    len = strlen(msgClosed);
-    if (length < len){
-      len = length; 
-    }
-  }
-  return len; 
+	return _state;
 }
 
+Door::DOOR_STATE Door::run()
+{
+	long now = millis();
+	long elapsed = now - _stateStartMs;
+	bool door_open = isOpen();
+
+	switch (_state)
+	{
+	case DOOR_RED:
+		if (door_open == false)
+		{
+			_stateStartMs = now;
+			_state = DOOR_GREEN;
+		}
+		break;
+	case DOOR_YELLOW:
+		if (door_open == false)
+		{
+			_stateStartMs = now;
+			_state = DOOR_GREEN;
+		}
+		else if (elapsed > _timeout)
+		{
+			_state = DOOR_RED;
+		}
+		break;
+	case DOOR_GREEN:
+		if (door_open == true)
+		{
+			_stateStartMs = now;
+			_state = DOOR_YELLOW;
+		}
+		break;
+	}
+
+	return _state;
+}
